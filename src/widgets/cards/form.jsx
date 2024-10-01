@@ -23,12 +23,23 @@ import {
  
 export default function NVRForm() {
   const [type, setType] = React.useState("card");
+  const [server, setServer] = useState('http://36.92.168.180');
+  const [port, setPort] = useState('10180');
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('telkomiot123');
+  const [prefix, setPrefix] = useState('cgi-bin/snapshot.cgi?channel=5&subtype=1');
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchImage = () => {
-    setLoading(true); // Set loading state when the button is clicked
-    fetch('http://localhost:3000/fetch-image')
+  const handleFetchImage = (e) => {
+    e.preventDefault(); // Prevent form submission from reloading the page
+    setLoading(true);
+
+    // Construct the full URL based on user input
+    const fullUrl = `http://${server}:${port}/${prefix}`;
+    console.log(fullUrl);
+
+    fetch(fullUrl)
       .then(response => response.blob()) // Convert the response to a blob (binary data)
       .then(blob => {
         // Create a local URL for the image blob
@@ -49,17 +60,20 @@ export default function NVRForm() {
         shadow={false}
         className="m-0 grid place-items-center px-4 py-8 text-center bg-orange-600 shadow-md"
       >
+        
+        <Typography variant="h4" color="white">
+          Add New Task
+        </Typography>
+
         <div className="mb-4 h-20 p-6 text-white">
+          <CreditCardIcon className="h-10 w-10 text-white mx-auto" />
           {type === "card" ? (
-            <CreditCardIcon className="h-10 w-10 text-white" />
+            <h2 className="font-bold text-white">RSTP CONFIGURATION</h2>
           ) : (
-            <CreditCardIcon className="h-10 w-10 text-white" />
+            <h2 className="font-bold text-white">FTP CONFIGURATION</h2>
             // <img alt="paypal " className="w-14 " src="https://docs.material-tailwind.com/icons/paypall.png" />
           )}
         </div>
-        <Typography variant="h5" color="white">
-          Add New Task
-        </Typography>
       </CardHeader>
       <CardBody>
         <Tabs value={type} className="overflow-visible">
@@ -86,22 +100,43 @@ export default function NVRForm() {
             }}
           >
             <TabPanel value="card" className="p-0">
-              <form className="mt-12 flex flex-col gap-4">
+              <form className="mt-12 flex flex-col gap-4" onSubmit={handleFetchImage}>
                 <div>
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium"
                   >
-                    RSTP Username
+                    RSTP Server
                   </Typography>
                   <Input
                     type="text"
-                    placeholder="admin"
+                    placeholder={server}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
+                    onChange={(e) => setServer(e.target.value)}
+                  />
+                </div>
+
+                <div className="my-3">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-2 font-medium "
+                  >
+                    RSTP Username
+                  </Typography>
+ 
+                  <Input
+                    placeholder="admin"
+                    type="text"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
 
@@ -121,6 +156,7 @@ export default function NVRForm() {
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
  
@@ -133,12 +169,13 @@ export default function NVRForm() {
                     RSTP Port
                   </Typography>
                   <Input
-                    placeholder="10180"
+                    placeholder={port}
                     type="text"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
+                    onChange={(e) => setPort(e.target.value)} 
                   />
                 </div>
 
@@ -152,16 +189,17 @@ export default function NVRForm() {
                   </Typography>
                   <Input
                     type="text"
-                    placeholder="channel=4&subtype=1"
+                    placeholder={prefix}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
+                    onChange={(e) => setPrefix(e.target.value)}
                   />
                 </div>
                 
                 
-                  <Button size="lg" onClick={fetchImage}>Test</Button>
+                  <Button size="lg" type="submit">Test</Button>
                   {loading ? (
                     <p>Loading image...</p>
                   ) : (
