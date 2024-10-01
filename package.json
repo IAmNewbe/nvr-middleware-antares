@@ -4,6 +4,7 @@
   "author": "Ahmad Ahlul Hikam",
   "version": "2.1.0",
   "type": "module",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
