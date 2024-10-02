@@ -23,8 +23,9 @@ import {
  
 export default function NVRForm() {
   const [type, setType] = React.useState("card");
-  const [server, setServer] = useState('http://36.92.168.180');
+  const [server, setServer] = useState('36.92.168.180');
   const [port, setPort] = useState('10180');
+  const [name, setName] = useState('Antares CCTV');
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('telkomiot123');
   const [prefix, setPrefix] = useState('cgi-bin/snapshot.cgi?channel=5&subtype=1');
@@ -68,7 +69,7 @@ export default function NVRForm() {
         <div className="mb-4 h-20 p-6 text-white">
           <CreditCardIcon className="h-10 w-10 text-white mx-auto" />
           {type === "card" ? (
-            <h2 className="font-bold text-white">RSTP CONFIGURATION</h2>
+            <h2 className="font-bold text-white">NVR CONFIGURATION</h2>
           ) : (
             <h2 className="font-bold text-white">FTP CONFIGURATION</h2>
             // <img alt="paypal " className="w-14 " src="https://docs.material-tailwind.com/icons/paypall.png" />
@@ -79,7 +80,7 @@ export default function NVRForm() {
         <Tabs value={type} className="overflow-visible">
           <TabsHeader className="relative z-0 ">
             <Tab value="card" onClick={() => setType("card")}>
-              RSTP API Credentials
+              NVR API Credentials
             </Tab>
             <Tab value="paypal" onClick={() => setType("paypal")}>
               FTP API Credentials
@@ -101,13 +102,32 @@ export default function NVRForm() {
           >
             <TabPanel value="card" className="p-0">
               <form className="mt-12 flex flex-col gap-4" onSubmit={handleFetchImage}>
+                <div className="mt-3">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-2 font-medium "
+                  >
+                    Task Name
+                  </Typography>
+ 
+                  <Input
+                    placeholder={name}
+                    type="text"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
                 <div>
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium"
                   >
-                    RSTP Server
+                    NVR Server
                   </Typography>
                   <Input
                     type="text"
@@ -120,13 +140,13 @@ export default function NVRForm() {
                   />
                 </div>
 
-                <div className="my-3">
+                <div className="">
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium "
                   >
-                    RSTP Username
+                    NVR Username
                   </Typography>
  
                   <Input
@@ -140,13 +160,13 @@ export default function NVRForm() {
                   />
                 </div>
 
-                <div className="my-3">
+                <div className="">
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium "
                   >
-                    RSTP Password
+                    NVR Password
                   </Typography>
  
                   <Input
@@ -160,13 +180,13 @@ export default function NVRForm() {
                   />
                 </div>
  
-                <div className="mb-3">
+                <div className="">
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium"
                   >
-                    RSTP Port
+                    NVR Port
                   </Typography>
                   <Input
                     placeholder={port}
@@ -185,7 +205,7 @@ export default function NVRForm() {
                     color="blue-gray"
                     className="mb-2 font-medium"
                   >
-                    RSTP Prefix
+                    NVR Prefix
                   </Typography>
                   <Input
                     type="text"
@@ -216,81 +236,14 @@ export default function NVRForm() {
             </TabPanel>
             <TabPanel value="paypal" className="p-0">
               <form className="mt-12 flex flex-col gap-4">
-                <div>
-                  <Typography
-                    variant="paragraph"
-                    color="blue-gray"
-                    className="mb-4 font-medium"
-                  >
-                    Personal Details
-                  </Typography>
+                <div className="my-3">
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="mb-2 font-medium"
                   >
-                    Your Email
-                  </Typography>
-                  <Input
-                    type="email"
-                    placeholder="name@mail.com"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                  />
-                </div>
- 
-                <div className="my-6">
-                  <Typography
-                    variant="paragraph"
-                    color="blue-gray"
-                    className="mb-4 font-medium"
-                  >
-                    Billing Address
-                  </Typography>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-2 font-medium"
-                  >
-                    Country
-                  </Typography>
-                  <Select
-                    placeholder="USA"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900">
-                    <option value="halo">
-
-                    </option>
-                  </Select>
-                  {/* <Select
-                    placeholder="USA"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                    menuProps={{ className: "h-48" }}
-                  >
-                    {countries.map(({ name, flags }) => (
-                      <Option key={name} value={name}>
-                        <div className="flex items-center gap-x-2">
-                          <img
-                            src={flags.svg}
-                            alt={name}
-                            className="h-4 w-4 rounded-full object-cover"
-                          />
-                          {name}
-                        </div>
-                      </Option>
-                    ))}
-                  </Select> */}
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mt-4 -mb-2 font-medium"
-                  >
-                    Postal Code
-                  </Typography>
+                    FTP URL
+                  </Typography> 
                   <Input
                     placeholder="0000"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -299,8 +252,95 @@ export default function NVRForm() {
                     }}
                     containerProps={{ className: "mt-4" }}
                   />
+              
+                  <Typography
+                    placeholder="antares.id"
+                    type="text"
+                    variant="small"
+                    color="blue-gray"
+                    className="mt-4 -mb-2 font-medium"
+                  >
+                    FTP Port
+                  </Typography>
+                  <Input
+                    placeholder="3000"
+                    type="text"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    containerProps={{ className: "mt-4" }}
+                  />
+
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mt-4 -mb-2 font-medium"
+                  >
+                    FTP Username
+                  </Typography>
+                  <Input
+                    placeholder="admin"
+                    type="text"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    containerProps={{ className: "mt-4" }}
+                  />
+
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mt-4 -mb-2 font-medium"
+                  >
+                    FTP Password
+                  </Typography>
+                  <Input
+                    placeholder="*****"
+                    type="password"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    containerProps={{ className: "mt-4" }}
+                  />
+
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mt-4 -mb-2 font-medium"
+                  >
+                    FTP Directory
+                  </Typography>
+                  <Input
+                    placeholder="/root"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    containerProps={{ className: "mt-4" }}
+                  />
                 </div>
                 <Button size="lg">Test</Button>
+
+                <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mt-4 -mb-2 font-medium flex"
+                  >
+                    Set Interval <p className="ml-2 font-light">(in seconds)</p>
+                  </Typography>
+                  
+                  <Input
+                    placeholder="720"
+                    type="text"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                    containerProps={{ className: "mt-4" }}
+                  />
               </form>
             </TabPanel>
           </TabsBody>
