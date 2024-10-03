@@ -14,6 +14,7 @@ import {
   TabPanel,
   Select,
   Option,
+  Alert
 } from "@material-tailwind/react";
 import {
   BanknotesIcon,
@@ -25,17 +26,19 @@ export default function NVRForm() {
   const [type, setType] = React.useState("card");
   const [inputData, setInputData] = useState(
     {
+      name: 'Antares CCTV',
       server: '36.92.168.180',
       port: '10180',
-      name: 'Antares CCTV',
-      username: 'admin',
+      username: 'admin',  
       password: 'telkomiot123',
       prefix: 'cgi-bin/snapshot.cgi?channel=5&subtype=1',
     }
   );
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
+  const [open, setOpen] = React.useState(false);
   const backEndUrl = 'localhost';
   const backEndPort = 3000;
   const backEndPath = '/postTaskById';
@@ -83,11 +86,15 @@ export default function NVRForm() {
       .then(response => response.json())
       .then(data => {
         setResponseMessage(`Server response: ${data.message}`);
+        setSuccess(true);
+        setOpen(true);
+        console.log(open);
         setLoading(false);
       })
       .catch(error => {
         console.error('Error sending data:', error);
         setResponseMessage('Error sending data');
+        setSuccess(false);
         setLoading(false);
       });
   };
@@ -151,6 +158,7 @@ export default function NVRForm() {
  
                   <Input
                     placeholder={inputData.name}
+                    
                     type="text"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
@@ -255,15 +263,19 @@ export default function NVRForm() {
                     onChange={(e) => setPrefix(e.target.value)}
                   />
                 </div>
-                
-                
-                  <Button size="lg" type="button" onClick={handleFetchImage}>Test</Button>
-                  {loading ? (
-                    <p>Loading image...</p>
-                  ) : (
-                    imageSrc && <img src={imageSrc} alt="Fetched from server" />
-                  )}
-                  <Button type="submit">Save</Button>
+
+                <Alert open={open} className="absolute z-50 top-1/4" color="green" onClose={() => setOpen(false)}>
+                  Task succesfully added.
+                </Alert>
+
+                <Button size="lg" type="button" onClick={handleFetchImage}>Test</Button>
+                {loading ? (
+                  <p>Loading image...</p>
+                ) : (
+                  imageSrc && <img src={imageSrc} alt="Fetched from server" />
+                )}
+
+                <Button type="submit">Save</Button>
 
                 <img src="" alt="" className="" />
 
