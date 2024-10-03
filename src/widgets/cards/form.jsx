@@ -23,14 +23,22 @@ import {
  
 export default function NVRForm() {
   const [type, setType] = React.useState("card");
-  const [server, setServer] = useState('36.92.168.180');
-  const [port, setPort] = useState('10180');
-  const [name, setName] = useState('Antares CCTV');
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('telkomiot123');
-  const [prefix, setPrefix] = useState('cgi-bin/snapshot.cgi?channel=5&subtype=1');
+  const [inputData, setInputData] = useState(
+    {
+      server: '36.92.168.180',
+      port: '10180',
+      name: 'Antares CCTV',
+      username: 'admin',
+      password: 'telkomiot123',
+      prefix: 'cgi-bin/snapshot.cgi?channel=5&subtype=1',
+    }
+  );
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
+  const backEndUrl = 'localhost';
+  const backEndPort = 3000;
+  const backEndPath = '/postTaskById';
 
   const handleFetchImage = (e) => {
     e.preventDefault(); // Prevent form submission from reloading the page
@@ -51,6 +59,36 @@ export default function NVRForm() {
       .catch(error => {
         console.error('Error fetching image:', error);
         setLoading(false); // Stop loading in case of error
+      });
+  };
+
+  const postData = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const fullUrl = `http://${backEndUrl}:${backEndPort}${backEndPath}`;
+
+    console.log("back end:",fullUrl);
+    const dataToSend = {
+      data: inputData,
+    };
+
+    fetch(fullUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then(response => response.json())
+      .then(data => {
+        setResponseMessage(`Server response: ${data.message}`);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error sending data:', error);
+        setResponseMessage('Error sending data');
+        setLoading(false);
       });
   };
  
@@ -101,7 +139,7 @@ export default function NVRForm() {
             }}
           >
             <TabPanel value="card" className="p-0">
-              <form className="mt-12 flex flex-col gap-4" onSubmit={handleFetchImage}>
+              <form className="mt-12 flex flex-col gap-4" onSubmit={postData}>
                 <div className="mt-3">
                   <Typography
                     variant="small"
@@ -112,7 +150,7 @@ export default function NVRForm() {
                   </Typography>
  
                   <Input
-                    placeholder={name}
+                    placeholder={inputData.name}
                     type="text"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
@@ -131,7 +169,7 @@ export default function NVRForm() {
                   </Typography>
                   <Input
                     type="text"
-                    placeholder={server}
+                    placeholder={inputData.server}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
@@ -150,7 +188,7 @@ export default function NVRForm() {
                   </Typography>
  
                   <Input
-                    placeholder="admin"
+                    placeholder={inputData.username}
                     type="text"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
@@ -189,7 +227,7 @@ export default function NVRForm() {
                     NVR Port
                   </Typography>
                   <Input
-                    placeholder={port}
+                    placeholder={inputData.port}
                     type="text"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
@@ -209,7 +247,7 @@ export default function NVRForm() {
                   </Typography>
                   <Input
                     type="text"
-                    placeholder={prefix}
+                    placeholder={inputData.prefix}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
@@ -219,12 +257,13 @@ export default function NVRForm() {
                 </div>
                 
                 
-                  <Button size="lg" type="submit">Test</Button>
+                  <Button size="lg" type="button" onClick={handleFetchImage}>Test</Button>
                   {loading ? (
                     <p>Loading image...</p>
                   ) : (
                     imageSrc && <img src={imageSrc} alt="Fetched from server" />
                   )}
+                  <Button type="submit">Save</Button>
 
                 <img src="" alt="" className="" />
 
