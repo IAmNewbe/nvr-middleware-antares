@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Card,
@@ -13,11 +13,24 @@ import {
   Tooltip,
   Chip,
   Progress,
+  iconButton,
 } from "@material-tailwind/react";
 
-import { authorsTableData } from "@/data";
+import team1 from "/img/team-1.jpeg";
+import { TaskApi } from "@/data";
+import { data } from "autoprefixer";
 
 const ListTask = () => {
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading
+
+  useEffect(() => {
+    TaskApi().then((result) => {
+      setData(result);
+      setLoading(false);
+    })
+  }, []);
+  
   return (
     <>
       <Card className=" xl:col-span-2 border border-blue-gray-100 shadow-sm">
@@ -46,10 +59,10 @@ const ListTask = () => {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
+              {data.map(
+                ({ id, name, user, server, online, created_at }, key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === data.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
@@ -58,7 +71,7 @@ const ListTask = () => {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" variant="rounded" />
+                          <Avatar src={team1} alt={name} size="sm" variant="rounded" />
                           <div>
                             <Typography
                               variant="small"
@@ -68,17 +81,17 @@ const ListTask = () => {
                               {name}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
+                              {server}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
+                          idk
                         </Typography>
                         <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
+                          hadeuh
                         </Typography>
                       </td>
                       <td className={className}>
@@ -91,7 +104,7 @@ const ListTask = () => {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {date}
+                          {created_at}
                         </Typography>
                       </td>
                       <td className= {" " + className}>

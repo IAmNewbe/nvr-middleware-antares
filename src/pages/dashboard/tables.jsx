@@ -9,10 +9,11 @@ import {
   Progress,
 } from "@material-tailwind/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { authorsTableData, projectsTableData } from "@/data";
+import { TaskApi, projectsTableData } from "@/data";
 import ListTask from "./listTask";
 
 export function Tables() {
+  TaskApi();
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       
