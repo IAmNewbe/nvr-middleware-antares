@@ -21,6 +21,7 @@ import {
   UserPlusIcon,
   UsersIcon,
   ChartBarIcon,
+  CloudArrowUpIcon
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { StatisticsChart } from "@/widgets/charts";
@@ -48,7 +49,21 @@ export function Home() {
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-    
+        
+        <StatisticsCard
+          key="Total Tasks"
+          value="2050"
+          title="Total Request"
+          icon={React.createElement(CloudArrowUpIcon, {
+            className: "w-6 h-6 text-white",
+          })}
+          footer={ 
+            <Typography className="font-normal text-blue-gray-600">
+              <strong className="text-green-500">+130%</strong>
+              &nbsp;than last week
+            </Typography>
+          }
+        />
         <StatisticsCard
           key="Total Tasks"
           value={data.length}

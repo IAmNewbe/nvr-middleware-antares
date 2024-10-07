@@ -20,7 +20,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
-import { platformSettingsData, conversationsData, projectsData } from "@/data";
 import NVRForm from "@/widgets/cards/form";
 
 export function AddTask() {

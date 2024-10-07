@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios';
-
+// import { useCountries } from "use-react-countries";
 import {
   Card,
   CardHeader,
@@ -25,23 +24,7 @@ import {
  
 export default function NVRForm() {
   const [type, setType] = React.useState("card");
-  const [tesNVRData, setTesNVRData] = useState({
-    server: '',
-    port: '',
-    username: '',  
-    password: '',
-    prefix: '',
-  });
-  const [tesFTPData, setTesFTPData] = useState({
-    ftp_url: '',
-    ftp_port: 21,
-    ftp_user: '',
-    ftp_pass: '',
-    ftp_dir: '',
-    send_interval: 5000,
-    status: '',
-  });
-  const [inputData, setInputData] = useState(
+  const [inputDataNVR, setInputDataNVR] = useState(
     {
       name: '',
       server: '',
@@ -49,6 +32,10 @@ export default function NVRForm() {
       username: '',  
       password: '',
       prefix: '',
+      
+    }
+  );
+  const [inputDataFTP, setInputDataFTP] = useState({
       ftp_url: '',
       ftp_port: '',
       ftp_user: '',
@@ -56,8 +43,7 @@ export default function NVRForm() {
       ftp_dir: '',
       send_interval: 5000,
       status: '',
-    }
-  );
+  });
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -66,41 +52,30 @@ export default function NVRForm() {
   const backEndUrl = 'localhost';
   const backEndPort = 3000;
   const backEndPath = '/postTaskById';
-  const backEndTestPath = '/fetch-image';
-  const testFtpPath = '/test-upload-image';
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTesNVRData({
-      ...tesNVRData,
-      [name]: value
-    });
-    setTesFTPData({
-      ...tesFTPData,
-      [name]: value
-    });
-    setInputData({
-      ...inputData,
-      [name]: value
-    });
+  const handleFetchImage = (e) => {
+    e.preventDefault(); // Prevent form submission from reloading the page
+    setLoading(true);
+
+    // Construct the full URL based on user input
+    const fullUrl = `http://${server}:${port}/${prefix}`;
+    console.log(fullUrl);
+
+    fetch(fullUrl)
+      .then(response => response.blob()) // Convert the response to a blob (binary data)
+      .then(blob => {
+        // Create a local URL for the image blob
+        const imageUrl = URL.createObjectURL(blob);
+        setImageSrc(imageUrl); // Set the image URL as the source
+        setLoading(false); // Stop loading when image is fetched
+      })
+      .catch(error => {
+        console.error('Error fetching image:', error);
+        setLoading(false); // Stop loading in case of error
+      });
   };
 
-  const handleFetchImage = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await axios.post(`http://${backEndUrl}:${backEndPort}/${backEndTestPath}`, tesNVRData, {
-        responseType: 'blob'});
-
-      const imageUrl = URL.createObjectURL(response.data); // Convert the response blob to a URL
-      setImageSrc(imageUrl);
-    } catch (error) {
-      console.error('Error fetching image:', error);
-    }
-  };
-
-  const postData = async (e) => {
+  const postData = (e) => {
     e.preventDefault();
     setLoading(true);
     
@@ -166,46 +141,57 @@ export default function NVRForm() {
               FTP API Credentials
             </Tab>
           </TabsHeader>
-            
-            <form className="mt-12 block lg:flex" onSubmit={postData}>
-              <div className="w-full mr-2 lg:w-1/2">
+          <TabsBody
+            className="!overflow-x-hidden !overflow-y-visible"
+            animate={{
+              initial: {
+                x: type === "card" ? 400 : -400,
+              },
+              mount: {
+                x: 0,
+              },
+              unmount: {
+                x: type === "card" ? 400 : -400,
+              },
+            }}
+          >
+            <TabPanel value="card" className="p-0">
+              <form className="mt-12 flex flex-col gap-4" onSubmit={postData}>
                 <div className="mt-3">
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium "
+                    className="mb-2 font-medium "
                   >
                     Task Name
                   </Typography>
-
+ 
                   <Input
                     placeholder="Antares CCTV"
                     type="text"
-                    name="name"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div>
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mb-2 font-medium"
                   >
                     NVR Server
                   </Typography>
                   <Input
                     type="text"
-                    name="server"
                     placeholder="36.92.168.180"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900 mb-2"
+                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setServer(e.target.value)}
                   />
                 </div>
 
@@ -213,20 +199,19 @@ export default function NVRForm() {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium "
+                    className="mb-2 font-medium "
                   >
                     NVR Username
                   </Typography>
-
+ 
                   <Input
                     placeholder="admin"
                     type="text"
-                    name="username"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
 
@@ -234,40 +219,38 @@ export default function NVRForm() {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium "
+                    className="mb-2 font-medium "
                   >
                     NVR Password
                   </Typography>
-
+ 
                   <Input
                     placeholder="******"
                     type="password"
-                    name="password"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-
+ 
                 <div className="">
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mb-2 font-medium"
                   >
                     NVR Port
                   </Typography>
                   <Input
                     placeholder="3000"
                     type="text"
-                    name="port"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange} 
+                    onChange={(e) => setPort(e.target.value)} 
                   />
                 </div>
 
@@ -275,53 +258,59 @@ export default function NVRForm() {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mb-2 font-medium"
                   >
                     NVR Prefix
                   </Typography>
                   <Input
                     type="text"
-                    name="prefix"
                     placeholder="cgi-bin/snapshot.cgi?channel=5&subtype=1"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setPrefix(e.target.value)}
                   />
                 </div>
 
-                <Alert open={open} className="absolute z-50 top-1/4 left-0" color="green" onClose={() => setOpen(false)}>
+                <Alert open={open} className="absolute z-50 top-1/4" color="green" onClose={() => setOpen(false)}>
                   Task succesfully added.
                 </Alert>
 
-                <Button type="button" onClick={handleFetchImage}>Test</Button>
+                <Button size="lg" type="button" onClick={handleFetchImage}>Test</Button>
                 {loading ? (
                   <p>Loading image...</p>
                 ) : (
-                  imageSrc && <img src={imageSrc} alt="Fetched from server" className="mt-3"/>
+                  imageSrc && <img src={imageSrc} alt="Fetched from server" />
                 )}
 
-                <img src="" alt="" className="" />
-              </div>
+                <Button type="submit">Save</Button>
 
-              <div className="w-full lg:w-1/2">
+                <img src="" alt="" className="" />
+
+                <Tab value="paypal" onClick={() => setType("paypal")} 
+                  className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3.5 px-7 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none">
+                  Continue
+                </Tab>
+              </form>
+            </TabPanel>
+            <TabPanel value="paypal" className="p-0">
+              <form className="mt-12 flex flex-col gap-4">
                 <div className="my-3">
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mb-2 font-medium"
                   >
                     FTP URL
                   </Typography> 
                   <Input
                     placeholder="www.gombel.xyz"
-                    name="ftp_url"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    containerProps={{ className: "mt-4" }}
                   />
               
                   <Typography
@@ -329,56 +318,52 @@ export default function NVRForm() {
                     type="text"
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mt-4 -mb-2 font-medium"
                   >
                     FTP Port
                   </Typography>
                   <Input
                     placeholder="3000"
                     type="text"
-                    name="ftp_port"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    onChange={handleChange}
+                    containerProps={{ className: "mt-4" }}
                   />
 
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mt-4 -mb-2 font-medium"
                   >
                     FTP Username
                   </Typography>
                   <Input
                     placeholder="admin"
                     type="text"
-                    name="ftp_user"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
-                    }}    
-                    onChange={handleChange}
+                    }}
+                    containerProps={{ className: "mt-4" }}
                   />
 
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="my-2 font-medium"
+                    className="mt-4 -mb-2 font-medium"
                   >
                     FTP Password
                   </Typography>
                   <Input
                     placeholder="*****"
                     type="password"
-                    name="ftp_pass"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    containerProps={{ className: "mt-2" }}
-                    onChange={handleChange}
+                    containerProps={{ className: "mt-4" }}
                   />
 
                   <Typography
@@ -390,16 +375,14 @@ export default function NVRForm() {
                   </Typography>
                   <Input
                     placeholder="/root"
-                    name="ftp_dir"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
-                    containerProps={{ className: "mt-2" }}
-                    onChange={handleChange}
+                    containerProps={{ className: "mt-4" }}
                   />
                 </div>
-                <Button >Test</Button>
+                <Button size="lg">Test</Button>
 
                 <Typography
                     variant="small"
@@ -412,17 +395,15 @@ export default function NVRForm() {
                   <Input
                     placeholder="720"
                     type="text"
-                    name="send_interval"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
                     containerProps={{ className: "mt-4" }}
-                    onChange={handleChange}
                   />
-              </div>
-            </form> 
-            <Button className="w-full mt-4" onClick={postData}>Save</Button>           
+              </form>
+            </TabPanel>
+          </TabsBody>
         </Tabs>
       </CardBody>
     </Card>
