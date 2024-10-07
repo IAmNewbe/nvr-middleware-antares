@@ -62,11 +62,14 @@ export default function NVRForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
-  const [open, setOpen] = React.useState(false);
+  const [redAlertTes, setRedAlertTes] = React.useState(false);
+  const [greenAlertTes, setGreenAlertTes] = React.useState(false);
+  const [redAlertPost, setRedAlertPost] = React.useState(false);
+  const [greenAlertPost, setGreenAlertPost] = React.useState(false);
   const backEndUrl = 'localhost';
   const backEndPort = 3000;
   const backEndPath = '/postTaskById';
-  const backEndTestPath = '/fetch-image';
+  const backEndTestPath = '/test-fetch-image';
   const testFtpPath = '/test-upload-image';
 
   // Handle form input changes
@@ -88,16 +91,56 @@ export default function NVRForm() {
 
   const handleFetchImage = async (e) => {
     e.preventDefault();
-    
+    console.log("Tes Image: ");
+    console.log(tesNVRData);
     try {
-      const response = await axios.post(`http://${backEndUrl}:${backEndPort}/${backEndTestPath}`, tesNVRData, {
+      const response = await axios.post(`http://${backEndUrl}:${backEndPort}${backEndTestPath}`, tesNVRData, {
         responseType: 'blob'});
 
-      const imageUrl = URL.createObjectURL(response.data); // Convert the response blob to a URL
+      const imageUrl = URL.createObjectURL(response.data);
+      setLoading(false); // Convert the response blob to a URL
       setImageSrc(imageUrl);
     } catch (error) {
       console.error('Error fetching image:', error);
+      setLoading(true);
     }
+  };
+
+  const handleSendImage = async (e) => {
+    e.preventDefault();
+    
+    const fullUrl = `http://${backEndUrl}:${backEndPort}${testFtpPath}`;
+
+    console.log("back end:",fullUrl);
+    const dataToSend = {
+      data: inputData,
+    };
+    console.log(dataToSend)
+
+    fetch(fullUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then(response => response)
+      .then(data => {
+        console.log("response : ", data.statusText);
+        setResponseMessage(`Server status: ${data.status}, ${data.statusText}`);
+        setLoading(false);
+        if (data.status !== 200 && data.status !== 201) {
+          setRedAlertTes(true);
+        } else {
+          setGreenAlert(true);
+        }
+      })
+      .catch(error => {
+        console.error('Error sending data:', error);
+        setResponseMessage('Error sending data');
+        // setLoading(true);
+        setRedAlertTes(true);
+      });
   };
 
   const postData = async (e) => {
@@ -122,8 +165,7 @@ export default function NVRForm() {
       .then(data => {
         setResponseMessage(`Server response: ${data.message}`);
         setSuccess(true);
-        setOpen(true);
-        console.log(open);
+        setGreenAlertPost(true);
         setLoading(false);
       })
       .catch(error => {
@@ -131,6 +173,7 @@ export default function NVRForm() {
         setResponseMessage('Error sending data');
         setSuccess(false);
         setLoading(false);
+        setRedAlertPost(true);
       });
   };
  
@@ -291,11 +334,7 @@ export default function NVRForm() {
                   />
                 </div>
 
-                <Alert open={open} className="absolute z-50 top-1/4 left-0" color="green" onClose={() => setOpen(false)}>
-                  Task succesfully added.
-                </Alert>
-
-                <Button type="button" onClick={handleFetchImage}>Test</Button>
+                <Button type="button" onClick={handleFetchImage}>Test Image</Button>
                 {loading ? (
                   <p>Loading image...</p>
                 ) : (
@@ -399,8 +438,14 @@ export default function NVRForm() {
                     onChange={handleChange}
                   />
                 </div>
-                <Button >Test</Button>
+                <Button onClick={handleSendImage}>Test</Button>
+                <Alert open={greenAlertTes} className="" color="green" onClose={() => setGreenAlertTes(false)}>
+                  {responseMessage}.  
+                </Alert>
 
+                <Alert open={redAlertTes} className="" color="red" onClose={() => setRedAlertTes(false)}>
+                  {responseMessage}.
+                </Alert>
                 <Typography
                     variant="small"
                     color="blue-gray"
@@ -422,7 +467,13 @@ export default function NVRForm() {
                   />
               </div>
             </form> 
-            <Button className="w-full mt-4" onClick={postData}>Save</Button>           
+            <Button className="w-full mt-4" onClick={postData}>Save</Button>
+            <Alert open={greenAlertPost} className="" color="green" onClose={() => setGreenAlertPost(false)}>
+                  Task succesfully added.
+            </Alert>
+            <Alert open={redAlertPost} className="" color="red" onClose={() => setRedAlertPost(false)}>
+                  Task not succesfully added.
+            </Alert>           
         </Tabs>
       </CardBody>
     </Card>
