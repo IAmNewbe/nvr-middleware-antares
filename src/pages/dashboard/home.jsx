@@ -257,7 +257,7 @@ export function Home() {
 
         <ListTask />
         
-        <Card className="border border-blue-gray-100 shadow-sm">
+        <Card className="shadow-sm">
           <CardHeader
             floated={false}
             shadow={false}

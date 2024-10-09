@@ -33,7 +33,7 @@ const ListTask = () => {
   
   return (
     <>
-      <Card className=" xl:col-span-2 border border-blue-gray-100 shadow-sm">
+      <Card className=" xl:col-span-2 shadow-sm">
           <CardHeader variant="gradient" className="mb-8 p-6 bg-orange-700">
             <Typography variant="h6" color="white">
               Task List

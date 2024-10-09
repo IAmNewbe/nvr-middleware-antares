@@ -182,7 +182,7 @@ export default function NVRForm() {
       <CardHeader
         floated={false}
         shadow={false}
-        className="m-0 grid place-items-center px-4 py-8 text-center bg-orange-600 shadow-md"
+        className="m-0 grid place-items-center px-4 py-8 text-center bg-orange-600 shadow-sm"
       >
         
         <Typography variant="h4" color="white">

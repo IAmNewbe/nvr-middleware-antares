@@ -6,7 +6,7 @@ import {
   ServerStackIcon,
   RectangleStackIcon,
 } from "@heroicons/react/24/solid";
-import { Home, AddTask, Tables, Notifications } from "@/pages/dashboard";
+import { Home, AddTask, Tables, AddUser, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -25,15 +25,20 @@ export const routes = [
       },
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "addtask",
+        name: "Add Task",
         path: "/addtask",
         element: <AddTask />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "tasklist",
+        name: "Task List",
         path: "/tasklist",
         element: <Tables />,
+      },{
+        icon: <UserCircleIcon {...icon} />,
+        name: "Add User",
+        path: "/adduser",
+        element: <AddUser />,
       },
       {
         icon: <InformationCircleIcon {...icon} />,
