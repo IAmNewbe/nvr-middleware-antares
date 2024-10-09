@@ -7,9 +7,14 @@ import {
 import { UserApi } from "@/data";
 import { useEffect, useState } from "react";
 import UserForm from "@/widgets/cards/userForm";
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css'; // Import default styles
  
 export function AddUser() {
   const [listUsers, setListUsers] = useState([]);
+  const baseURL = "localhost";
+  const basePort = 3000;
+  const deleteUserPath = "/deleteUser";
 
   useEffect(() => {
     UserApi().then((result) => {
@@ -17,6 +22,26 @@ export function AddUser() {
       console.log(listUsers);
     })
   }, []);
+
+  // Function to handle deleting a user
+  const deleteUser = async (username) => {
+    try {
+      const response = await fetch(`http://${baseURL}:${basePort}${deleteUserPath}/${username}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // If successful, remove user from the state
+        setListUsers(listUsers.filter(user => user.username !== username));
+        toast.success(`User ${username} deleted successfully!`);
+      } else {
+        toast.error(`Failed to delete user: ${username}`); 
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Error deleting user.');
+    }
+  };
 
   return (
     <div className="justify-center mx-auto mt-4 md:mt-8 block md:flex bg-white shadow-none md:shadow-sm rounded-lg">
@@ -36,7 +61,7 @@ export function AddUser() {
               key={props.username}
               {...props}
               action={
-                <Button variant="text" size="sm">
+                <Button variant="text" size="sm" onClick={() => deleteUser(props.username)}>
                   Delete
                 </Button>
               }
@@ -44,6 +69,7 @@ export function AddUser() {
           ))}
         </ul>
       </div>
+      {/* <ToastContainer position="top-center" theme="colored"/> */}
     </div>
       
   );

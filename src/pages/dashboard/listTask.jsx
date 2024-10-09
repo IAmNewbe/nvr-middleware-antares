@@ -16,20 +16,61 @@ import {
   iconButton,
 } from "@material-tailwind/react";
 
-import team1 from "/img/team-1.jpeg";
+import team1 from "/img/logo-atlassian.svg";
 import { TaskApi } from "@/data";
 import { data } from "autoprefixer";
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const ListTask = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
-
+  const baseUrl = "localhost";
+  const baseport = 3000;
+  const deleteTaskPath = "/deleteTaskById";
+  const runTaskPath = "/runTaskById";
   useEffect(() => {
     TaskApi().then((result) => {
       setData(result);
       setLoading(false);
     })
   }, []);
+
+  const handleRunTask = async (taskId) => {
+    try {
+      const response = await fetch(`http://${baseUrl}:${baseport}${runTaskPath}/${taskId}`, {
+        method: 'POST',
+      });
+      const result = await response.json();
+      if (response.ok) {
+        // Optionally update the UI with the task status
+        console.log('Task started successfully:', result);
+      } else {
+        console.error('Error starting task:', result);
+      }
+    } catch (error) {
+      console.error('Error in run task:', error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId, name) => {
+    try {
+      const response = await fetch(`http://${baseUrl}:${baseport}${deleteTaskPath}/${taskId}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Remove the deleted task from the state
+        setData(data.filter((task) => task.id !== taskId));
+        console.log(`Task ${name}  deleted successfully`);
+        toast.success(`Task ${name} deleted successfully!`);
+      } else {
+        console.error('Error deleting task:');
+      }
+    } catch (error) {
+      console.error('Error in delete task:', error);
+    }
+  };
   
   return (
     <>
@@ -43,7 +84,7 @@ const ListTask = () => {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Task Name", "Interval", "Status", "Employed", "Action"].map((el) => (
+                {["Task Name", "Interval Port", "Status", "Employed", "Action"].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -60,7 +101,7 @@ const ListTask = () => {
             </thead>
             <tbody>
               {data.map(
-                ({ id, name, user, server, online, created_at }, key) => {
+                ({ id, name, server, port, online, updated_at, send_interval }, key) => {
                   const className = `py-3 px-5 ${
                     key === data.length - 1
                       ? ""
@@ -88,10 +129,10 @@ const ListTask = () => {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          idk
+                          {send_interval} sec
                         </Typography>
                         <Typography className="text-xs font-normal text-blue-gray-500">
-                          hadeuh
+                          {port}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -104,7 +145,17 @@ const ListTask = () => {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {created_at}
+                        {
+                          new Date(updated_at).toLocaleString('en-ID', {
+                            month: 'long',   // Full month name
+                            day: '2-digit',  // Day with leading zero
+                            year: 'numeric', // Full year
+                            hour: '2-digit', // Hour (12-hour clock)
+                            minute: '2-digit', // Minute with leading zero
+                            second: '2-digit', // Second with leading zero
+                            hour12: false    // Use 12-hour AM/PM format
+                          })
+                        }
                         </Typography>
                       </td>
                       <td className= {" " + className}>
@@ -120,13 +171,15 @@ const ListTask = () => {
                           as="a"
                           href="#"
                           className="text-xs font-semibold mx-1 text-blue-gray-600"
+                          onClick={() => handleRunTask(id)}
                         >
-                          Stop
+                          Run
                         </Typography>
                         <Typography
                           as="a"
                           href="#"
                           className="text-xs font-semibold mx-1 text-red-600"
+                          onClick={() => handleDeleteTask(id, name)}
                         >
                           Delete
                         </Typography>

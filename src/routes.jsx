@@ -5,6 +5,7 @@ import {
   InformationCircleIcon,
   ServerStackIcon,
   RectangleStackIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { Home, AddTask, Tables, AddUser, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
@@ -24,7 +25,7 @@ export const routes = [
         element: <Home />,
       },
       {
-        icon: <UserCircleIcon {...icon} />,
+        icon: <ServerStackIcon {...icon} />,
         name: "Add Task",
         path: "/addtask",
         element: <AddTask />,
@@ -35,7 +36,7 @@ export const routes = [
         path: "/tasklist",
         element: <Tables />,
       },{
-        icon: <UserCircleIcon {...icon} />,
+        icon: <UserGroupIcon {...icon} />,
         name: "Add User",
         path: "/adduser",
         element: <AddUser />,
@@ -53,7 +54,7 @@ export const routes = [
     layout: "auth",
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
+        icon: <UserCircleIcon {...icon} />,
         name: "sign in",
         path: "/sign-in",
         element: <SignIn />,

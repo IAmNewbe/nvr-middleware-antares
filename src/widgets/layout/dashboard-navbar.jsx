@@ -19,6 +19,10 @@ import {
   ClockIcon,
   CreditCardIcon,
   Bars3Icon,
+  TableCellsIcon,
+  AdjustmentsVerticalIcon,
+  ServerStackIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import {
   useMaterialTailwindController,
@@ -36,7 +40,7 @@ export function DashboardNavbar() {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all ${
+      className={`rounded-xl transition-all justify-center ${
         fixedNavbar
           ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
           : "px-0 py-1"
@@ -72,35 +76,64 @@ export function DashboardNavbar() {
             {page}
           </Typography>
         </div>
-        <div className="flex items-center">
-          <div className="mr-auto md:mr-4 md:w-56">
+        <div className="flex items-center justify-between md:justify-normal">
+          <div className="mr-auto md:mr-4 md:w-56 hidden md:block">
             <Input label="Search" />
           </div>
-          <IconButton
-            variant="text"
-            color="blue-gray"
-            className="grid xl:hidden"
-            onClick={() => setOpenSidenav(dispatch, !openSidenav)}
-          >
-            <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
-          </IconButton>
-          <Link to="/auth/sign-in">
+          <Link to="addtask">
             <Button
               variant="text"
               color="blue-gray"
               className="hidden items-center gap-1 px-4 xl:flex normal-case"
             >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-              Sign In
+              <ServerStackIcon className="h-5 w-5 text-blue-gray-500" />
+              Add Task
             </Button>
             <IconButton
               variant="text"
               color="blue-gray"
               className="grid xl:hidden"
             >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
+              <ServerStackIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
           </Link>
+
+          <Link to="tasklist">
+            <Button
+              variant="text"
+              color="blue-gray"
+              className="hidden items-center gap-1 px-4 xl:flex normal-case"
+            >
+              <TableCellsIcon className="h-5 w-5 text-blue-gray-500" />
+              List Tasks
+            </Button>
+            <IconButton
+              variant="text"
+              color="blue-gray"
+              className="grid xl:hidden"
+            >
+              <TableCellsIcon  className="h-5 w-5 text-blue-gray-500" />
+            </IconButton>
+          </Link>
+
+          <Link to="adduser">
+            <Button
+              variant="text"
+              color="blue-gray"
+              className="hidden items-center gap-1 px-4 xl:flex normal-case"
+            >
+              <UserGroupIcon className="h-5 w-5 text-blue-gray-500" />
+              Add User
+            </Button>
+            <IconButton
+              variant="text"
+              color="blue-gray"
+              className="grid xl:hidden"
+            >
+              <UserGroupIcon className="h-5 w-5 text-blue-gray-500" />
+            </IconButton>
+          </Link>
+
           <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
@@ -179,12 +212,20 @@ export function DashboardNavbar() {
               </MenuItem>
             </MenuList>
           </Menu>
-          <IconButton
+          {/* <IconButton
             variant="text"
             color="blue-gray"
             onClick={() => setOpenConfigurator(dispatch, true)}
           >
             <Cog6ToothIcon className="h-5 w-5 text-blue-gray-500" />
+          </IconButton> */}
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            className="grid xl:hidden"
+            onClick={() => setOpenSidenav(dispatch, !openSidenav)}
+          >
+            <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
         </div>
       </div>

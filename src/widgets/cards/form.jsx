@@ -132,7 +132,7 @@ export default function NVRForm() {
         if (data.status !== 200 && data.status !== 201) {
           setRedAlertTes(true);
         } else {
-          setGreenAlert(true);
+          setGreenAlertTes(true);
         }
       })
       .catch(error => {
