@@ -11,7 +11,7 @@ const websiteViewsChart = {
   ],
   options: {
     ...chartsConfig,
-    colors: "#388e3c",
+    colors: "#F57C00",
     plotOptions: {
       bar: {
         columnWidth: "16%",
@@ -36,7 +36,7 @@ const dailySalesChart = {
   ],
   options: {
     ...chartsConfig,
-    colors: ["#0288d1"],
+    colors: ["#546e7a"],
     stroke: {
       lineCap: "round",
     },
@@ -71,7 +71,7 @@ const completedTaskChart = {
   ],
   options: {
     ...chartsConfig,
-    colors: ["#388e3c"],
+    colors: ["#22C55E"],
     stroke: {
       lineCap: "round",
     },
@@ -107,15 +107,15 @@ const completedTasksChart = {
 export const statisticsChartsData = [
   {
     color: "white",
-    title: "Website View",
+    title: "Daily Task",
     description: "Last Campaign Performance",
     footer: "campaign sent 2 days ago",
     chart: websiteViewsChart,
   },
   {
     color: "white",
-    title: "Daily Sales",
-    description: "15% increase in today sales",
+    title: "Total Request",
+    description: "15% increase in today ",
     footer: "updated 4 min ago",
     chart: dailySalesChart,
   },

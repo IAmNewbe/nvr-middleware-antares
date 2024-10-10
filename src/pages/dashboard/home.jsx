@@ -37,22 +37,30 @@ import ListTask from "./listTask";
 
 export function Home() {
   const [data, setData] = React.useState([]);
+  const [totalRequest, setTotalRequest] = useState(2680);
+  const [totalTask, setTotalTask] = useState(0);
+  const [totalInActiveTask, setTotalInActiveTask] = useState(0);
+  const [totalActiveTask, setTotalActiveTask] = useState(0);
   const [loading, setLoading] = useState(true); // State to track loading
+
   useEffect(() => {
     TaskApi().then((result) => {
       setData(result);
       setLoading(false);
+      setTotalRequest(result.reduce((sum, task) => sum + task.success, 0));
+      setTotalTask(result.length);
+      setTotalInActiveTask(result.reduce((sum, task) => sum + (task.status == 0), 0));
+      setTotalActiveTask(result.reduce((sum, task) => sum + (task.status == 1), 0));
     })
   }, []);
-
-  // console.log(data.length);
+  
   return (
     <div className="mt-12">
-      <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-8 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         
         <StatisticsCard
           key="Total Tasks"
-          value="2050"
+          value={totalRequest}
           title="Total Request"
           icon={React.createElement(CloudArrowUpIcon, {
             className: "w-6 h-6 text-white",
@@ -66,7 +74,7 @@ export function Home() {
         />
         <StatisticsCard
           key="Total Tasks"
-          value={data.length}
+          value={totalTask}
           title="Total Tasks"
           icon={React.createElement(ChartBarIcon, {
             className: "w-6 h-6 text-white",
@@ -80,7 +88,7 @@ export function Home() {
         />
         <StatisticsCard
           key="Active Tasks"
-          value={data.length}
+          value={totalActiveTask}
           title="Active Tasks"
           icon={React.createElement(ArrowUpIcon, {
             className: "w-6 h-6 text-white",
@@ -95,7 +103,7 @@ export function Home() {
 
         <StatisticsCard
           key="Stopped Tasks"
-          value={data.length}
+          value={totalInActiveTask}
           title="Stopped Tasks"
           icon={React.createElement(ArrowDownIcon , {
             className: "w-6 h-6 text-white",
@@ -109,7 +117,7 @@ export function Home() {
         />
        
       </div>
-      {/* <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mb-6 md:mb-10 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
         {statisticsChartsData.map((props) => (
           <StatisticsChart
             key={props.title}
@@ -125,7 +133,7 @@ export function Home() {
             }
           />
         ))}
-      </div> */}
+      </div>
       <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
           <CardHeader

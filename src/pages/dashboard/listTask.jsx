@@ -101,7 +101,7 @@ const ListTask = () => {
             </thead>
             <tbody>
               {data.map(
-                ({ id, name, server, port, online, updated_at, send_interval }, key) => {
+                ({ id, name, server, port, updated_at, send_interval, status }, key) => {
                   const className = `py-3 px-5 ${
                     key === data.length - 1
                       ? ""
@@ -129,7 +129,7 @@ const ListTask = () => {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {send_interval} sec
+                          {send_interval/1000} Seconds
                         </Typography>
                         <Typography className="text-xs font-normal text-blue-gray-500">
                           {port}
@@ -138,8 +138,8 @@ const ListTask = () => {
                       <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={online ? "green" : "blue-gray"}
-                          value={online ? "online" : "offline"}
+                          color={status ? "green" : "blue-gray"}
+                          value={status ? "Running" : "Stopped"}
                           className="py-0.5 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>
@@ -163,22 +163,22 @@ const ListTask = () => {
                         <Typography
                           as="a"
                           href="#"
-                          className="text-xs font-semibold mx-1 text-green-700"
+                          className="text-xs font-semibold mx-1 text-orange-700 hover:ring-1 hover:ring-orange-700 rounded-sm p-1"
                         >
                           Edit
                         </Typography>
                         <Typography
                           as="a"
                           href="#"
-                          className="text-xs font-semibold mx-1 text-blue-gray-600"
+                          className={"text-xs font-semibold mx-1 rounded-sm hover:ring-1 p-1 " + (status ? "text-blue-gray-600 hover:ring-blue-gray-600 " : "text-green-700 hover:ring-green-700")}
                           onClick={() => handleRunTask(id)}
                         >
-                          Run
+                          {status ? "Stop" : "Run"}
                         </Typography>
                         <Typography
                           as="a"
                           href="#"
-                          className="text-xs font-semibold mx-1 text-red-600"
+                          className="text-xs font-semibold mx-1 text-red-600 hover:ring-1 hover:ring-red-600 rounded-sm p-1"
                           onClick={() => handleDeleteTask(id, name)}
                         >
                           Delete
