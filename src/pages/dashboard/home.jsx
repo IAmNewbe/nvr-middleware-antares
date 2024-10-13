@@ -38,6 +38,7 @@ import ListTask from "./listTask";
 export function Home() {
   const [data, setData] = React.useState([]);
   const [totalRequest, setTotalRequest] = useState(2680);
+  const [totalFailed, setTotalFailed] = useState(100);
   const [totalTask, setTotalTask] = useState(0);
   const [totalInActiveTask, setTotalInActiveTask] = useState(0);
   const [totalActiveTask, setTotalActiveTask] = useState(0);
@@ -48,6 +49,7 @@ export function Home() {
       setData(result);
       setLoading(false);
       setTotalRequest(result.reduce((sum, task) => sum + task.success, 0));
+      setTotalFailed(result.reduce((sum, task) => sum + task.failed, 0));
       setTotalTask(result.length);
       setTotalInActiveTask(result.reduce((sum, task) => sum + (task.status == 0), 0));
       setTotalActiveTask(result.reduce((sum, task) => sum + (task.status == 1), 0));
@@ -59,7 +61,7 @@ export function Home() {
       <div className="mb-8 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         
         <StatisticsCard
-          key="Total Tasks"
+          key="Total Request"
           value={totalRequest}
           title="Total Request"
           icon={React.createElement(CloudArrowUpIcon, {
@@ -67,8 +69,8 @@ export function Home() {
           })}
           footer={ 
             <Typography className="font-normal text-blue-gray-600">
-              <strong className="text-green-500">+130%</strong>
-              &nbsp;than last week
+              <strong className="text-red-600">{totalFailed}</strong>
+              &nbsp;total failed request
             </Typography>
           }
         />

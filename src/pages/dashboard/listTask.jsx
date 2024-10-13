@@ -28,7 +28,7 @@ const ListTask = () => {
   const baseUrl = "localhost";
   const baseport = 3000;
   const deleteTaskPath = "/deleteTaskById";
-  const runTaskPath = "/runTaskById";
+  const runTaskPath = "/toggle-task-status";
   useEffect(() => {
     TaskApi().then((result) => {
       setData(result);
@@ -39,12 +39,24 @@ const ListTask = () => {
   const handleRunTask = async (taskId) => {
     try {
       const response = await fetch(`http://${baseUrl}:${baseport}${runTaskPath}/${taskId}`, {
-        method: 'POST',
+        method: 'PUT',
       });
       const result = await response.json();
       if (response.ok) {
-        // Optionally update the UI with the task status
-        console.log('Task started successfully:', result);
+        if(result.data == 0) {
+          console.log('Task stopped successfully:', result);
+          toast.success("Task stopped successfully");
+          
+        } else {
+          console.log('Task started successfully:', result);
+          toast.success("Task started successfully");
+        }
+        setData((prevData) =>
+          prevData.map((task) =>
+            task.id === taskId ? { ...task, status: result.data } : task
+          )
+        );
+        
       } else {
         console.error('Error starting task:', result);
       }
@@ -135,8 +147,8 @@ const ListTask = () => {
                           {port}
                         </Typography>
                       </td>
-                      <td className={className}>
-                        <Chip
+                      <td className={className} >
+                        <Chip 
                           variant="gradient"
                           color={status ? "green" : "blue-gray"}
                           value={status ? "Running" : "Stopped"}
@@ -169,16 +181,14 @@ const ListTask = () => {
                         </Typography>
                         <Typography
                           as="a"
-                          href="#"
-                          className={"text-xs font-semibold mx-1 rounded-sm hover:ring-1 p-1 " + (status ? "text-blue-gray-600 hover:ring-blue-gray-600 " : "text-green-700 hover:ring-green-700")}
+                          className={"cursor-pointer text-xs font-semibold mx-1 rounded-sm hover:ring-1 p-1 " + (status ? "text-blue-gray-600 hover:ring-blue-gray-600 " : "text-green-700 hover:ring-green-700")}
                           onClick={() => handleRunTask(id)}
                         >
                           {status ? "Stop" : "Run"}
                         </Typography>
                         <Typography
                           as="a"
-                          href="#"
-                          className="text-xs font-semibold mx-1 text-red-600 hover:ring-1 hover:ring-red-600 rounded-sm p-1"
+                          className="cursor-pointer text-xs font-semibold mx-1 text-red-600 hover:ring-1 hover:ring-red-600 rounded-sm p-1"
                           onClick={() => handleDeleteTask(id, name)}
                         >
                           Delete
