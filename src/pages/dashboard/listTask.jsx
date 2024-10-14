@@ -21,6 +21,7 @@ import { TaskApi } from "@/data";
 import { data } from "autoprefixer";
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; 
+import { Link } from 'react-router-dom';
 
 const ListTask = () => {
   const [data, setData] = React.useState([]);
@@ -121,7 +122,7 @@ const ListTask = () => {
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr key={id}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <Avatar src={team1} alt={name} size="sm" variant="rounded" />
@@ -172,13 +173,14 @@ const ListTask = () => {
                       </td>
                       <td className= {" " + className}>
                         <div className="flex">
-                        <Typography
-                          as="a"
-                          href="#"
-                          className="text-xs font-semibold mx-1 text-orange-700 hover:ring-1 hover:ring-orange-700 rounded-sm p-1"
-                        >
-                          Edit
-                        </Typography>
+                        <Link to={`./edit-task/${id}`}>
+                            <Typography
+                              as="span"
+                              className="text-xs font-semibold mx-1 text-orange-700 hover:ring-1 hover:ring-orange-700 rounded-sm p-1"
+                            >
+                              Edit
+                            </Typography>
+                          </Link>
                         <Typography
                           as="a"
                           className={"cursor-pointer text-xs font-semibold mx-1 rounded-sm hover:ring-1 p-1 " + (status ? "text-blue-gray-600 hover:ring-blue-gray-600 " : "text-green-700 hover:ring-green-700")}

@@ -8,7 +8,8 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-import antaresLogo from "/img/logo/logo_antares.svg"
+import antaresLogo from "/img/logo/logo_antares.svg";
+import { useNavigate } from "react-router-dom";
 
 export function Sidenav({ brandImg, brandName, routes }) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -17,6 +18,23 @@ export function Sidenav({ brandImg, brandName, routes }) {
     dark: "bg-gradient-to-br from-gray-800 to-gray-900",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Show confirmation dialog
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+
+    if (confirmLogout) {
+      // Clear the token or any user data from local storage/session storage
+      localStorage.removeItem('token'); // or sessionStorage.removeItem('token');
+
+      // Optionally, reset any application state related to authentication here if you're using context or state management
+
+      // Redirect to the login page
+      navigate('/auth/sign-in'); // Adjust the route to your login page
+    }
   };
 
   return (
@@ -49,8 +67,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
         </IconButton>
       </div>
       <div className="m-4">
-        {routes.map(({ layout, title, pages }, key) => (
-          <ul key={key} className="mb-4 flex flex-col gap-1">
+        {routes.map(({ layout, title, pages, style }, key) => (
+          <ul key={key} className={style + " mb-4 flex flex-col gap-1"}>
             {title && (
               <li className="mx-3.5 mt-4 mb-2">
                 <Typography
@@ -62,8 +80,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
                 </Typography>
               </li>
             )}
-            {pages.map(({ icon, name, path }) => (
-              <li key={name}>
+            {pages.map(({ icon, name, path, style='' }) => (
+              <li key={name} className={style}>
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
                     <Button
@@ -93,7 +111,13 @@ export function Sidenav({ brandImg, brandName, routes }) {
             ))}
           </ul>
         ))}
+        <Button className="w-full bg-gray-900" onClick={handleLogout}>
+          <Typography className="text-base capitalize font-medium">
+            Log Out
+          </Typography>
+        </Button>
       </div>
+      
     </aside>
   );
 }

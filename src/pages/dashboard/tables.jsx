@@ -11,9 +11,19 @@ import {
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { TaskApi, projectsTableData } from "@/data";
 import ListTask from "./listTask";
+import team2 from "/img/logo-slack.svg";
+import { useState, useEffect } from "react";
 
 export function Tables() {
-  TaskApi();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    TaskApi().then((result) => {
+      setData(result);
+      setLoading(false);
+    })
+  }, []);
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       
@@ -22,14 +32,14 @@ export function Tables() {
       <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
           <Typography variant="h6" color="white">
-            Projects Table
+            Task Statistics
           </Typography>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["companies", "members", "budget", "completion", ""].map(
+                {["Task Name / URL", "Interval", "Saved Success", "Saved Failed", "Success Rate", ""].map(
                   (el) => (
                     <th
                       key={el}
@@ -47,8 +57,8 @@ export function Tables() {
               </tr>
             </thead>
             <tbody>
-              {projectsTableData.map(
-                ({ img, name, members, budget, completion }, key) => {
+              {data.map(
+                ({ name, server, port, prefix, send_interval, success, failed }, key) => {
                   const className = `py-3 px-5 ${
                     key === projectsTableData.length - 1
                       ? ""
@@ -59,37 +69,44 @@ export function Tables() {
                     <tr key={name}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" />
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {name}
-                          </Typography>
+                          <Avatar src={team2} alt={name} size="sm" />
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {name}
+                            </Typography>
+                            <Typography className="text-xs font-normal text-blue-gray-500">
+                                {server}:{port}/{prefix}
+                            </Typography>
+                          </div>
+                          
                         </div>
                       </td>
                       <td className={className}>
-                        {members.map(({ img, name }, key) => (
-                          <Tooltip key={name} content={name}>
-                            <Avatar
-                              src={img}
-                              alt={name}
-                              size="xs"
-                              variant="circular"
-                              className={`cursor-pointer border-2 border-white ${
-                                key === 0 ? "" : "-ml-2.5"
-                              }`}
-                            />
-                          </Tooltip>
-                        ))}
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {send_interval/1000} Seconds
+                        </Typography>
+                        <Typography className="text-xs font-normal text-blue-gray-500">
+                          {port}
+                        </Typography>
                       </td>
                       <td className={className}>
                         <Typography
                           variant="small"
                           className="text-xs font-medium text-blue-gray-600"
                         >
-                          {budget}
+                          {success}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography
+                          variant="small"
+                          className="text-xs font-medium text-blue-gray-600"
+                        >
+                          {failed}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -98,12 +115,12 @@ export function Tables() {
                             variant="small"
                             className="mb-1 block text-xs font-medium text-blue-gray-600"
                           >
-                            {completion}%
+                            {Math.round((success * 100) / (success + failed))} %
                           </Typography>
                           <Progress
-                            value={completion}
+                            value={Math.round((success * 100) / (success + failed))}
                             variant="gradient"
-                            color={completion === 100 ? "green" : "gray"}
+                            color={Math.round((success * 100) / (success + failed)) === 100 ? "green" : "gray"}
                             className="h-1"
                           />
                         </div>
