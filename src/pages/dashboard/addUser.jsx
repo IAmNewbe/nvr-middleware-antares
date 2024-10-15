@@ -15,6 +15,7 @@ export function AddUser() {
   const baseURL = "localhost";
   const basePort = 3000;
   const deleteUserPath = "/deleteUser";
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     UserApi().then((result) => {
@@ -25,21 +26,26 @@ export function AddUser() {
 
   // Function to handle deleting a user
   const deleteUser = async (username) => {
-    try {
-      const response = await fetch(`http://${baseURL}:${basePort}${deleteUserPath}/${username}`, {
-        method: 'DELETE',
-      });
+    const confirmLogout = window.confirm("Are you sure want to Delete this User?");
 
-      if (response.ok) {
-        // If successful, remove user from the state
-        setListUsers(listUsers.filter(user => user.username !== username));
-        toast.success(`User ${username} deleted successfully!`);
-      } else {
-        toast.error(`Failed to delete user: ${username}`); 
+    if (confirmLogout) {
+      try {
+        const response = await fetch(`http://${baseURL}:${basePort}${deleteUserPath}/${username}`, {
+          method: 'DELETE',
+          Authorization: `Bearer ${token}`,
+        });
+  
+        if (response.ok) {
+          // If successful, remove user from the state
+          setListUsers(listUsers.filter(user => user.username !== username));
+          toast.success(`User ${username} deleted successfully!`);
+        } else {
+          toast.error(`Failed to delete user: ${username}`); 
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        toast.error('Error deleting user.');
       }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      toast.error('Error deleting user.');
     }
   };
 

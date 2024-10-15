@@ -67,21 +67,24 @@ const ListTask = () => {
   };
 
   const handleDeleteTask = async (taskId, name) => {
-    try {
-      const response = await fetch(`http://${baseUrl}:${baseport}${deleteTaskPath}/${taskId}`, {
-        method: 'DELETE',
-      });
-      
-      if (response.ok) {
-        // Remove the deleted task from the state
-        setData(data.filter((task) => task.id !== taskId));
-        console.log(`Task ${name}  deleted successfully`);
-        toast.success(`Task ${name} deleted successfully!`);
-      } else {
-        console.error('Error deleting task:');
+    const confirmLogout = window.confirm("Are you sure want to Delete this User?");
+    if (confirmLogout) {
+      try {
+        const response = await fetch(`http://${baseUrl}:${baseport}${deleteTaskPath}/${taskId}`, {
+          method: 'DELETE',
+        });
+        
+        if (response.ok) {
+          // Remove the deleted task from the state
+          setData(data.filter((task) => task.id !== taskId));
+          console.log(`Task ${name}  deleted successfully`);
+          toast.success(`Task ${name} deleted successfully!`);
+        } else {
+          console.error('Error deleting task:');
+        }
+      } catch (error) {
+        console.error('Error in delete task:', error);
       }
-    } catch (error) {
-      console.error('Error in delete task:', error);
     }
   };
   

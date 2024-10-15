@@ -19,6 +19,7 @@ export function UserForm() {
   const baseUrl = "localhost";
   const baseport = 3000;
   const addUserPath = '/postUserById';
+  const token = localStorage.getItem('token');
   const [responseMessage, setResponseMessage] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -48,7 +49,8 @@ export function UserForm() {
     fetch(postUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(newUserData),
     })
@@ -60,9 +62,11 @@ export function UserForm() {
       setSuccess(true);
       if (data.status !== 200 && data.status !== 201) {
         setRedAlert(true);
+        alert(data.message);
 
       } else {
         setGreenAlert(true);
+        alert('Success added user');
         toast.success('User added successfully!', data.username);
         setTimeout(() => {
           window.location.reload();
@@ -71,6 +75,7 @@ export function UserForm() {
      })
      .catch(error => {
       console.error('Error sending data:', error);
+      alert('Error sending data:', error);
       setResponseMessage('Error sending data');
       setLoading(false);
       setSuccess(false);

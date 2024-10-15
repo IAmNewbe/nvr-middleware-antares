@@ -23,6 +23,8 @@ import {
   AdjustmentsVerticalIcon,
   ServerStackIcon,
   UserGroupIcon,
+  HomeIcon,
+  HomeModernIcon,
 } from "@heroicons/react/24/solid";
 import {
   useMaterialTailwindController,
@@ -77,9 +79,26 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center justify-between md:justify-normal">
-          <div className="mr-auto md:mr-4 md:w-56 hidden md:block">
+          {/* <div className="mr-auto md:mr-4 md:w-56 hidden md:block">
             <Input label="Search" />
-          </div>
+          </div> */}
+          <Link to="home">
+          <Button
+              variant="text"
+              color="blue-gray"
+              className="hidden items-center gap-1 px-4 xl:flex normal-case"
+            >
+              <HomeIcon className="h-5 w-5 text-blue-gray-500" />
+              Home
+            </Button>
+            <IconButton
+              variant="text"
+              color="blue-gray"
+              className="grid xl:hidden"
+            >
+              <HomeIcon className="h-5 w-5 text-blue-gray-500" />
+            </IconButton>
+          </Link>
           <Link to="addtask">
             <Button
               variant="text"
@@ -134,7 +153,7 @@ export function DashboardNavbar() {
             </IconButton>
           </Link>
 
-          <Menu>
+          {/* <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
                 <BellIcon className="h-5 w-5 text-blue-gray-500" />
@@ -211,7 +230,7 @@ export function DashboardNavbar() {
                 </div>
               </MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
           {/* <IconButton
             variant="text"
             color="blue-gray"
