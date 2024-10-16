@@ -22,12 +22,13 @@ import { data } from "autoprefixer";
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; 
 import { Link } from 'react-router-dom';
+import Server from "@/data/conf";
 
 const ListTask = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
-  const baseUrl = "localhost";
-  const baseport = 3000;
+  const baseUrl = Server.baseURL;
+  const baseport = Server.basePort;
   const deleteTaskPath = "/deleteTaskById";
   const runTaskPath = "/toggle-task-status";
   useEffect(() => {

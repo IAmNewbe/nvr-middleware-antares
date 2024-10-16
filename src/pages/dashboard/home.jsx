@@ -21,7 +21,9 @@ import {
   UserPlusIcon,
   UsersIcon,
   ChartBarIcon,
-  CloudArrowUpIcon
+  CloudArrowUpIcon,
+  CloudIcon,
+  ArrowUpCircleIcon
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { StatisticsChart } from "@/widgets/charts";
@@ -31,9 +33,10 @@ import {
   projectsTableData,
   ordersOverviewData,
 } from "@/data";
-import { ArrowDownIcon, CheckCircleIcon, ClockIcon, } from "@heroicons/react/24/solid";
+import { ArrowDownCircleIcon, ArrowDownIcon, ArrowUpOnSquareStackIcon, CheckCircleIcon, ClockIcon, CloudArrowDownIcon, } from "@heroicons/react/24/solid";
 import { TaskApi } from "@/data";
 import ListTask from "./listTask";
+import ListUser from "@/widgets/cards/listUser";
 
 export function Home() {
   const [data, setData] = React.useState([]);
@@ -43,6 +46,7 @@ export function Home() {
   const [totalInActiveTask, setTotalInActiveTask] = useState(0);
   const [totalActiveTask, setTotalActiveTask] = useState(0);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [serverCount, setServerCount] = useState();
 
   useEffect(() => {
     TaskApi().then((result) => {
@@ -53,7 +57,20 @@ export function Home() {
       setTotalTask(result.length);
       setTotalInActiveTask(result.reduce((sum, task) => sum + (task.status == 0), 0));
       setTotalActiveTask(result.reduce((sum, task) => sum + (task.status == 1), 0));
-    })
+
+      // Count occurrences of each server
+      const serverCount = result.reduce((acc, task) => {
+        acc[task.server] = (acc[task.server] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Find the most common server count
+      const mostCommonServerCount = Math.max(...Object.values(serverCount));
+
+      setServerCount(mostCommonServerCount);
+      })
+
+      
   }, []);
   
   return (
@@ -63,14 +80,14 @@ export function Home() {
         <StatisticsCard
           key="Total Request"
           value={totalRequest}
-          title="Total Request"
+          title="Total Requests"
           icon={React.createElement(CloudArrowUpIcon, {
             className: "w-6 h-6 text-white",
           })}
           footer={ 
             <Typography className="font-normal text-blue-gray-600">
-              <strong className="text-red-600">{totalFailed}</strong>
-              &nbsp;total failed request
+              <strong className="text-green-600">{Math.round((totalRequest-totalFailed)*100/totalRequest)}%</strong>
+              &nbsp;success rate requests
             </Typography>
           }
         />
@@ -83,8 +100,8 @@ export function Home() {
           })}
           footer={ 
             <Typography className="font-normal text-blue-gray-600">
-              <strong className="text-green-500">+10%</strong>
-              &nbsp;than last week
+              <strong className="text-green-500">{serverCount}</strong>
+              &nbsp;tasks have the same server
             </Typography>
           }
         />
@@ -97,23 +114,23 @@ export function Home() {
           })}
           footer={ 
             <Typography className="font-normal text-blue-gray-600">
-              <strong className="text-green-500">+10%</strong>
-              &nbsp;than last week
+              <strong className="text-red-500">{totalInActiveTask}</strong>
+              &nbsp;tasks is stopped
             </Typography>
           }
         />
 
         <StatisticsCard
-          key="Stopped Tasks"
-          value={totalInActiveTask}
-          title="Stopped Tasks"
-          icon={React.createElement(ArrowDownIcon , {
+          key="Success Requests"
+          value={totalRequest-totalFailed}
+          title="Success Requests"
+          icon={React.createElement(ArrowUpCircleIcon , {
             className: "w-6 h-6 text-white",
           })}
           footer={ 
             <Typography className="font-normal text-blue-gray-600">
-              <strong className="text-green-500">+10%</strong>
-              &nbsp;than last week
+              <strong className="text-red-500">{totalFailed}</strong>
+              &nbsp;failed Requests
             </Typography>
           }
         />
@@ -266,8 +283,13 @@ export function Home() {
         </Card> */}
 
         <ListTask />
+
+        <div className="px-4 py-6 bg-white rounded-xl shadow-sm">
+          <ListUser size="h5"/>
+        </div>
         
-        <Card className="shadow-sm">
+        
+        {/* <Card className="shadow-sm">
           <CardHeader
             floated={false}
             shadow={false}
@@ -323,7 +345,7 @@ export function Home() {
               )
             )}
           </CardBody>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

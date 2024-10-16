@@ -42,6 +42,13 @@ export const routes = [
         style: 'hidden',
       },
       {
+        icon: <ServerIcon {...icon} />,
+        name: "Edit Task",
+        path: "/tasklist/edit-task/:id",
+        element: <EditTask />,
+        style: 'hidden',
+      },
+      {
         icon: <TableCellsIcon {...icon} />,
         name: "Task List",
         path: "/tasklist",
@@ -58,6 +65,7 @@ export const routes = [
         name: "notifications",
         path: "/notifications",
         element: <Notifications />,
+        style: 'hidden',
       },
     ],
   },

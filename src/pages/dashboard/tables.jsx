@@ -39,7 +39,7 @@ export function Tables() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Task Name / URL", "Interval", "Saved Success", "Saved Failed", "Success Rate", ""].map(
+                {["Task Name / URL", "Interval", "Success Request", "Failed Request", "Success Rate", ""].map(
                   (el) => (
                     <th
                       key={el}

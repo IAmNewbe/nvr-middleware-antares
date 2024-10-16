@@ -22,6 +22,7 @@ import {
   CreditCardIcon,
   LockClosedIcon,
 } from "@heroicons/react/24/solid";
+import Server from "@/data/conf";
  
 export default function NVRForm() {
   const [type, setType] = React.useState("card");
@@ -66,8 +67,8 @@ export default function NVRForm() {
   const [greenAlertTes, setGreenAlertTes] = React.useState(false);
   const [redAlertPost, setRedAlertPost] = React.useState(false);
   const [greenAlertPost, setGreenAlertPost] = React.useState(false);
-  const backEndUrl = 'localhost';
-  const backEndPort = 3000;
+  const backEndUrl = Server.baseURL;
+  const backEndPort = Server.basePort;
   const backEndPath = '/postTaskById';
   const backEndTestPath = '/test-fetch-image';
   const testFtpPath = '/test-upload-image';

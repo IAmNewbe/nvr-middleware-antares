@@ -44,10 +44,9 @@ Let us know your thoughts below. And good luck with development!
 
 - [Versions](#versions)
 - [Demo](#demo)
-- [Quick Start](#quick-start)
 - [Deploy](#deploy)
 - [Documentation](#documentation)
-- [File Structure](#file-structure)
+- [File Structure](#files-overview)
 - [Browser Support](#browser-support)
 - [Resources](#resources)
 - [Reporting Issues](#reporting-issues)
@@ -82,26 +81,32 @@ Let us know your thoughts below. And good luck with development!
 
 1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
 2. Navigate to the root ./ directory of the product and run `npm install` or `yarn install` or `pnpm install` to install our local dependencies.
+3. Start the Project on development `yarn dev`
 
 ## Documentation
 
 The documentation for the Material Tailwind Dashboard React is hosted at our [website](https://material-tailwind.com/?ref=readme-mtdr).
 
-### What's included
+## Files Overview
 
 Within the download you'll find the following directories and files:
 
 ```
-material-tailwind-dashboard-react
+nvr-antares-dashboard
+
     ├── public
     │   ├── css
-    │   └── img
+    │   ├── img
+    │   │   ├── logo
+    │   │   └── sign
     ├── src
     │   ├── configs
     │   ├── context
     │   ├── data
     │   ├── layouts
     │   ├── pages
+    │   │   ├── auth
+    │   │   └── dashboard       
     │   ├── widgets
     │   │   ├── cards
     │   │   ├── charts
@@ -138,12 +143,3 @@ At present, we officially aim to support the last two versions of the following 
 - [Support](https://www.creative-tim.com/contact-us?ref=readme-mtdr)
 - Issues: [Github Issues Page](https://github.com/creativetimofficial/material-tailwind-dashboard-react/issues)
 - [Nepcha Analytics](https://nepcha.com?ref=readme) - Analytics tool for your website
-
-## Reporting Issues
-
-We use GitHub Issues as the official bug tracker for the Material Tailwind Dashboard React. Here are some advices for our users that want to report an issue:
-
-1. Make sure that you are using the latest version of the Material Tailwind Dashboard React. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/product/material-tailwind-dashboard-react?ref=readme-mtdr).
-2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
-3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
-

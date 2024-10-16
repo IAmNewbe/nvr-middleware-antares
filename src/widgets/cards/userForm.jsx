@@ -1,4 +1,5 @@
 
+import Server from "@/data/conf";
 import { FlagIcon } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -16,8 +17,8 @@ import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; 
 
 export function UserForm() {
-  const baseUrl = "localhost";
-  const baseport = 3000;
+  const baseUrl = Server.baseURL;
+  const baseport = Server.basePort;
   const addUserPath = '/postUserById';
   const token = localStorage.getItem('token');
   const [responseMessage, setResponseMessage] = useState(false);

@@ -4,18 +4,21 @@ import {
   Checkbox,
   Button,
   Typography,
+  Alert,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Server from "@/data/conf";
 
 export function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const baseUrl = 'localhost';
-  const basePort = 3000;
+  const [redAlert, setRedAlert] = useState(false);
+  const [greenAlert, setGreenAlert] = useState(false);
+  const baseUrl = Server.baseURL;
+  const basePort = Server.basePort;
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -33,10 +36,12 @@ export function SignIn() {
       if (response.ok) {
         // Save token in localStorage or sessionStorage
         localStorage.setItem('token', result.token);
+        setRedAlert(false);
         // Optionally redirect the user after login
         navigate('/dashboard/home');
       } else {
         setErrorMessage(result.message || 'Login failed');
+        setRedAlert(true);
       }
     } catch (error) {
       setErrorMessage('Error during login');
@@ -44,7 +49,9 @@ export function SignIn() {
   };
   return (
     <section className="m-8 flex gap-4">
-      <div className="w-full lg:w-3/5 mt-24">
+      
+      <div className="w-full lg:w-3/5 mt-16">
+        <img src="/img/sign/logo.png" alt="logo" className="justify-center text-center w-48 md:w-60 mx-auto mb-6"/>  
         <div className="text-center">
           <Typography variant="h2" className="font-bold mb-4">Sign In</Typography>
           <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to Sign In.</Typography>
@@ -81,11 +88,15 @@ export function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit" className="mt-6 bg-orange-800 hover:shadow-deep-orange-700" fullWidth>
+          <Button type="submit" className="my-6 bg-orange-800 hover:shadow-deep-orange-700" fullWidth>
             Sign In
           </Button>
 
-          <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
+          <Alert open={redAlert} color="red" onClose={() => setRedAlert(false)}>
+            {errorMessage}
+          </Alert>
+
+          <Typography variant="paragraph" className="text-center hidden text-blue-gray-500 font-medium mt-4">
             Not registered?
             <Link to="/auth/sign-up" className="text-gray-900 ml-1">Create account</Link>
           </Typography>

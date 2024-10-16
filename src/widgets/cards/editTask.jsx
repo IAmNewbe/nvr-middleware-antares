@@ -17,6 +17,7 @@ import {
   Alert
 } from "@material-tailwind/react";
 import { CreditCardIcon } from "@heroicons/react/24/solid";
+import Server from "@/data/conf";
 
 export default function EditTask() {
   const { id } = useParams(); // Extract id from the URL params
@@ -41,8 +42,8 @@ export default function EditTask() {
   const [greenAlertPost, setGreenAlertPost] = useState(false);
   const [redAlertPost, setRedAlertPost] = useState(false);
   
-  const backEndUrl = 'localhost';
-  const backEndPort = 3000;
+  const backEndUrl = Server.baseURL;
+  const backEndPort = Server.basePort;
   const backEndPath = `/editTaskById/${id}`; // Use the edit path with task ID
 
   // Fetch existing task data when the component mounts

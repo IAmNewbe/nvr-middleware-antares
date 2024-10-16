@@ -25,6 +25,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   HomeModernIcon,
+  PowerIcon,
 } from "@heroicons/react/24/solid";
 import {
   useMaterialTailwindController,
@@ -32,12 +33,31 @@ import {
   setOpenSidenav,
 } from "@/context";
 
+import { useNavigate } from "react-router-dom";
+
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { openSidenav } = controller;
   const fixedNavbar = true;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Show confirmation dialog
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+
+    if (confirmLogout) {
+      // Clear the token or any user data from local storage/session storage
+      localStorage.removeItem('token'); // or sessionStorage.removeItem('token');
+
+      // Optionally, reset any application state related to authentication here if you're using context or state management
+
+      // Redirect to the login page
+      navigate('/auth/sign-in'); // Adjust the route to your login page
+    }
+  };
 
   return (
     <Navbar
@@ -152,6 +172,24 @@ export function DashboardNavbar() {
               <UserGroupIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
           </Link>
+
+          <div to="adduser" onClick={handleLogout}>
+            <Button
+              variant="text"
+              color="blue-gray"
+              className="hidden items-center gap-1 px-4 xl:flex normal-case"
+            >
+              <PowerIcon className="h-5 w-5 text-blue-gray-500" />
+              Log Out
+            </Button>
+            <IconButton
+              variant="text"
+              color="blue-gray"
+              className="grid xl:hidden"
+            >
+              <PowerIcon className="h-5 w-5 text-blue-gray-500" />
+            </IconButton>
+          </div>
 
           {/* <Menu>
             <MenuHandler>
