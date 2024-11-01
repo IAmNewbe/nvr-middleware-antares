@@ -452,7 +452,7 @@ export default function NVRForm() {
                     color="blue-gray"
                     className="mt-4 -mb-2 font-medium flex"
                   >
-                    Set Interval <p className="ml-2 font-light">(in seconds)</p>
+                    Set Interval <p className="ml-2 font-light">(in miliseconds)</p>
                   </Typography>
                   
                   <Input
