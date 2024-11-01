@@ -4,7 +4,7 @@
   "author": "Ahmad Ahlul Hikam",
   "version": "2.1.0",
   "type": "module",
-  "proxy": "http://localhost:3000, antares.id:21",
+  "proxy": "http://localhost:3000, http://localhost:3003, antares.id:21, http://192.168.254.121:3003",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
